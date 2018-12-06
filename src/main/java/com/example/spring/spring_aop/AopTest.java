@@ -16,6 +16,8 @@ public class AopTest {
     public void testAop() {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
         UserService userService = (UserService) ctx.getBean("userService");
-        userService.add();
+//        userService.add();
+//        userService.delete();
+        userService.edit();
     }
 }

@@ -35,7 +35,8 @@ public class Operator {
     public void afterThrowing(JoinPoint joinPoint, Throwable error) {
         System.out.println("Aop afterThrowing advice ..." + error);
     }
-    @Around("pointCut()")
+    /// Around环绕通知与AfterThrowing和AfterReturning冲突，不要同时开启，他的优先级比before高，是最重要的通知
+//    @Around("pointCut()")
     public void around(ProceedingJoinPoint pjp) {
         System.out.println("Aop around before...");
         try {
