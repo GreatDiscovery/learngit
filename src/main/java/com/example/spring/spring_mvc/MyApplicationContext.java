@@ -34,11 +34,12 @@ public class MyApplicationContext {
             config.load(is);
             String packageName = config.getProperty("scanPackage");
             doRegister(packageName);
+            doCreateBean();
+            populateBean();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        doCreateBean();
-        populateBean();
+
     }
 
     private void doCreateBean() {
