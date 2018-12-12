@@ -11,8 +11,8 @@ public class JdbcTest {
     public static void main(String[] args) {
         // 原生jdbc操作
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/goods", "root", "123456");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/goods?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC", "root", "123456");
             PreparedStatement pstm = con.prepareStatement("select * from t_admin");
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
