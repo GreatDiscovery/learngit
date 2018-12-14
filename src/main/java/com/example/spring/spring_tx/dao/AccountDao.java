@@ -29,9 +29,10 @@ public class AccountDao {
         return money;
     }
 
-    public void updateForOut(String out, Double money) throws Exception {
-        String sql = "update t_account set money = money-? where name = ?";
-        template.update(sql, money, out);
+    public int updateForOut(String out, Double money) throws Exception {
+        String sql = "update t_account set money = money-? where name = ? and money >= ?";
+        int count = template.update(sql, money, out, money);
+        return count;
     }
 
     public void updateForIn(String in, Double money) throws Exception {
