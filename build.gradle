@@ -29,7 +29,11 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-web')
 	implementation('org.springframework.boot:spring-boot-starter-aop')
 	implementation('org.springframework.boot:spring-boot-starter-jdbc')
+	implementation('org.springframework.boot:spring-boot-starter-logging')
 	implementation('mysql:mysql-connector-java:8.0.13')
 	implementation('org.springframework.boot:spring-boot-starter-test')
 	implementation('com.alibaba:druid:1.1.9')
+	implementation('org.jvnet.hudson:ganymed-ssh2:build210-hudson-1')
+	implementation('org.apache.commons:commons-compress:1.10')
+	implementation(group: 'com.alibaba', name: 'fastjson', version: '1.2.46')
 }

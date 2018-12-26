@@ -1,5 +1,7 @@
 package meite.example.thread;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author gavin
  * @date 2018/12/11 12:04
@@ -16,7 +18,7 @@ public class CreateThreadDemo01 extends Thread {
                 e.printStackTrace();
             }
     }
-
+    @SuppressWarnings("deprecation")
     public static void main(String[] args) {
         CreateThreadDemo01 t1 = new CreateThreadDemo01();
         // 设置为守护线程
@@ -30,6 +32,7 @@ public class CreateThreadDemo01 extends Thread {
                 System.out.println("id:" + Thread.currentThread().getId() + ",main , i = " + i);
             }
             // 主线程死掉不影响用户线程
+
             Thread.currentThread().stop();
         } catch (Exception e){
             e.printStackTrace();
