@@ -33,7 +33,10 @@ public class TcpServer {
                     } catch (IOException e) {}
                 }
             });
-
+            while (true) {
+                Thread.sleep(1000);
+                System.out.println("测试阻塞------");
+            }
 
             }
         } catch (Exception e) {
