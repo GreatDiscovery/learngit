@@ -3,16 +3,17 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
-    <!--<bean id="userService" class="com.example.spring.spring_aop.UserService"></bean>-->
-    <!--<context:component-scan base-package="com.example.spring.spring_aop"/>-->
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd ">
+    <bean id="userService" class="com.example.spring.spring_aop.UserService"></bean>
+    <context:component-scan base-package="com.example.spring.spring_aop"/>
+
     <context:component-scan base-package="com.example.spring.spring_tx"/>
     <bean id="propertyConfigure"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
-            <list>
-                <value>../resources/application.properties</value>
-            </list>
+            <!--<list>-->
+                <!--<value>../resources/application.properties</value>-->
+            <!--</list>-->
         </property>
     </bean>
 
@@ -67,12 +68,11 @@
         <property name="statementExecutableSqlLogEnable" value="false"/>
     </bean>
 
-    <!-- transaction support-->
-    <!-- PlatformTransactionMnager -->
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
     <!-- enable transaction annotation support -->
     <context:annotation-config/>
     <tx:annotation-driven transaction-manager="txManager" />
+
 </beans>
