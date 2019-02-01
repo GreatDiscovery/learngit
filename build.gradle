@@ -40,4 +40,5 @@ dependencies {
 	implementation(group: 'com.alibaba', name: 'fastjson', version: '1.2.46')
 	compile("io.netty:netty:3.3.0.Final")
 	compile("commons-lang:commons-lang:2.6")
+	compile("org.apache.activemq:activemq-core:5.7.0")
 }
