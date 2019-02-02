@@ -1,6 +1,11 @@
 package jdk.override.util;
 
+import sun.misc.SharedSecrets;
+
+import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author gavin
@@ -86,9 +91,18 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E>, RandomAc
         return (minCapacity > MAX_ARRAY_SIZE) ? Integer.MAX_VALUE : MAX_ARRAY_SIZE;
     }
 
-    public int size() { return  size; }
-    public boolean isEmpty() { return size == 0; }
-    public boolean contains(Object o) { return indexOf(o) > 0; }
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean contains(Object o) {
+        return indexOf(o) > 0;
+    }
+
     public int indexOf(Object o) {
         if (o == null) {
             for (int i = 0; i < size; i++) {
@@ -112,6 +126,7 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E>, RandomAc
             v.elementData = Arrays.copyOf(elementData, size);
             // 新建的数组修改次数为0
             v.modCount = 0;
+            return v;
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e);
         }
@@ -167,22 +182,95 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E>, RandomAc
         E oldValue = elementData(index);
         int numMoved = size - index - 1;
         if (numMoved > 0) {
-            System.arraycopy(elementData, index + 1, elementData, index , numMoved);
+            System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         }
         elementData[--size] = null;
         return oldValue;
+    }
+
+    public boolean remove(Object o) {
+        if (o == null) {
+            for (int i = 0; i < size; i++) {
+                if (elementData[i] == null) {
+                    fastRemove(i);
+                    return true;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (o.equals(elementData[i])) {
+                    fastRemove(i);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // 不做多余的事情，哪怕多写一个方法，也要减少开销
+    private void fastRemove(int index) {
+        modCount++;
+        int numMoved = size - index - 1;
+        if (numMoved > 0) {
+            System.arraycopy(elementData, index + 1, elementData, index, numMoved);
+        }
+        elementData[--size] = null;
+    }
+
+    public void clear() {
+        modCount++;
+        for (int i = 0; i < size; i++) {
+            elementData[i] = null;
+        }
+        size = 0;
+    }
+
+    public boolean addAll(Collection<? extends E> c) {
+        Object[] a = c.toArray();
+        int numNew = a.length;
+        ensureCapacityInternal(size + numNew);
+        System.arraycopy(a, 0, elementData, size, numNew);
+        size += numNew;
+        return numNew != 0;
+    }
+
+    public boolean addAll(int index, Collection<? extends E> c) {
+        rangeCheckForAdd(index);
+        Object[] a = c.toArray();
+        int numNew = a.length;
+        ensureCapacityInternal(size + numNew);
+        int numMoved = size - index;
+        if (numMoved > 0) {
+            System.arraycopy(elementData, index, elementData, index + numNew, numMoved);
+        }
+        System.arraycopy(a, 0, elementData, index, numNew);
+        size += numNew;
+        return numNew != 0;
+    }
+
+    protected void removeRange(int fromIndex, int toIndex) {
+        modCount++;
+        int numMoved = size - toIndex;
+        System.arraycopy(elementData, toIndex, elementData, fromIndex, numMoved);
+        int newSize = size - (toIndex - fromIndex);
+        for (int i = newSize; i < size; i++) {
+            elementData[i] = null;
+        }
+        size = newSize;
     }
 
     public void rangeCheckForAdd(int index) {
         if (index > size || index < 0)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
+
     private static int calculateCapacity(Object[] elementData, int minCapacity) {
         if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
             return Math.max(DEFAULT_CAPACITY, minCapacity);
         }
         return minCapacity;
     }
+
     private void ensureCapacityInternal(int minCapacity) {
         ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));
     }
@@ -191,7 +279,197 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E>, RandomAc
         if (index >= size)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
+
     private String outOfBoundsMsg(int index) {
         return "Index:" + index + ", Size:" + size;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream s) throws IOException {
+        int expectedModCount = modCount;
+        s.defaultWriteObject();
+        s.writeInt(size);
+        for (int i = 0; i < size; i++) {
+            s.writeObject(elementData[i]);
+        }
+        // 确保在写的过程中没有数据丢失，没有对数组进行修改
+        if (modCount != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
+    }
+
+    private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException {
+        elementData = EMPTY_ELEMENTDATA;
+        s.defaultReadObject();
+        // 这句被忽略了
+        s.readInt();
+        if (size > 0) {
+            int capacity = calculateCapacity(elementData, size);
+            SharedSecrets.getJavaOISAccess().checkArray(s, Object[].class, capacity);
+            ensureCapacityInternal(size);
+            Object[] a = elementData;
+
+            for (int i = 0; i < size; i++) {
+                a[i] = s.readObject();
+            }
+        }
+    }
+
+    public ListIterator<E> listIterator(int index) {
+        if (index < 0 || index > size)
+            throw new IndexOutOfBoundsException("Index: " + index);
+        return new ListItr(index);
+    }
+
+    public Iterator<E> iterator() {
+        return new Itr();
+    }
+
+    private class Itr implements Iterator<E> {
+        // 当前元素所在下标
+        int cursor;
+        // 返回数的下标
+        int lastRet = -1;
+        int expectedModCount = modCount;
+
+        Itr() {
+        }
+
+        public boolean hasNext() {
+            return cursor != size;
+        }
+
+        public E next() {
+            checkForComodification();
+            int i = cursor;
+            if (i >= size)
+                throw new NoSuchElementException();
+            Object[] elementData = MyArrayList.this.elementData;
+            if (i >= elementData.length)
+                throw new ConcurrentModificationException();
+            cursor = i + 1;
+            return (E) elementData[lastRet = i];
+        }
+
+        public void remove() {
+            if (lastRet < 0)
+                throw new IllegalStateException();
+            checkForComodification();
+            MyArrayList.this.remove(lastRet);
+            cursor = lastRet;
+            lastRet = -1;
+            expectedModCount = modCount;
+        }
+
+        final void checkForComodification() {
+            if (modCount != expectedModCount)
+                throw new ConcurrentModificationException();
+        }
+    }
+
+    private class ListItr extends Itr implements ListIterator<E> {
+        public ListItr(int index) {
+            super();
+            cursor = index;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return cursor != 0;
+        }
+
+        @Override
+        public E previous() {
+            checkForComodification();
+            int i = cursor - 1;
+            if (i < 0)
+                throw new NoSuchElementException();
+            Object[] elementData = MyArrayList.this.elementData;
+            if (i >= elementData.length)
+                throw new ConcurrentModificationException();
+            cursor = i;
+            return (E) elementData[lastRet = i];
+        }
+
+        @Override
+        public int nextIndex() {
+            return cursor;
+        }
+
+        @Override
+        public int previousIndex() {
+            return cursor - 1;
+        }
+
+        @Override
+        public void set(E e) {
+
+        }
+
+        @Override
+        public void add(E e) {
+
+        }
+    }
+
+    @Override
+    public void forEach(Consumer<? super E> action) {
+        Objects.requireNonNull(action);
+        final int expectedModCount = modCount;
+        final E[] elementData = (E[]) this.elementData;
+        final int size = this.size;
+        for (int i = 0; modCount == expectedModCount && i < size; i++) {
+            action.accept(elementData[i]);
+        }
+        if (modCount != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
+    }
+
+    @Override
+    public boolean removeIf(Predicate<? super E> filter) {
+        Objects.requireNonNull(filter);
+        int removeCount = 0;
+        final BitSet removeSet = new BitSet(size);
+        final int expectedModCount = modCount;
+        final int size = this.size;
+        for (int i = 0; modCount == expectedModCount && i < size; i++) {
+            final E element = (E) elementData[i];
+            if (filter.test(element)) {
+                removeSet.set(i);
+                removeCount++;
+            }
+        }
+        if (modCount != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
+        final boolean anyToRemove = removeCount > 0;
+        if (anyToRemove) {
+            final int newSize = size - removeCount;
+            for (int i = 0, j = 0; (i < size) && (j < newSize); i++, j++) {
+                // 找从i开始的下一个为false的索引
+                i = removeSet.nextClearBit(i);
+                elementData[j] = elementData[i];
+            }
+            for (int k = newSize; k < size; k++) {
+                elementData[k] = null;
+            }
+            this.size = newSize;
+            if (modCount != expectedModCount) {
+                throw new ConcurrentModificationException();
+            }
+            modCount++;
+        }
+
+        return anyToRemove;
+    }
+
+    @Override
+    public void sort(Comparator<? super E> c) {
+        final int expectedModCount = modCount;
+        Arrays.sort((E[]) elementData, 0, size, c);
+        if (modCount != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
+        modCount++;
     }
 }
