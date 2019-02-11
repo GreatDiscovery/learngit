@@ -41,4 +41,5 @@ dependencies {
 	compile("io.netty:netty:3.3.0.Final")
 	compile("commons-lang:commons-lang:2.6")
 	compile("org.apache.activemq:activemq-core:5.7.0")
+	compile('org.apache.zookeeper:zookeeper:3.4.6')
 }
