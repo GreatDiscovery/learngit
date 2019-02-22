@@ -1,6 +1,7 @@
 package jdk.override.util;
 
 import org.junit.Test;
+import sun.reflect.generics.tree.Tree;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -9,6 +10,9 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import static jdk.override.util.MyHashMap.TreeNode.balanceInsertion;
+import static jdk.override.util.MyHashMap.TreeNode.tieBreakOrder;
 
 /**
  * @author gavin
@@ -369,11 +373,91 @@ public class MyHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, Clo
         }
         return newTab;
     }
-
+    // 将拉链上的node换成TreeNode,并且维护一个双向链表
     final void treeifyBin(Node<K, V>[] tab, int hash) {
-
+        int n, index; Node<K,V> e;
+        // 如果tab为空，或者数组的大小小于4*8
+        if (tab == null || (n = tab.length) < MIN_TREEIFY_CAPACITY)
+            resize();
+        else if ((e = tab[index = (n - 1) & hash]) != null) {
+            TreeNode<K,V> hd = null, tl = null;
+            do {
+                TreeNode<K,V> p = replacementTreeNode(e, null);
+                if (tl == null)
+                    hd = p;
+                else {
+                     p.prev = tl;
+                     tl.next = p;
+                }
+                tl = p;
+            } while ((e = e.next) != null);
+            if ((tab[index] = hd) != null)
+                hd.treeify(tab);
+        }
     }
 
+    final void treeify(Node<K,V>[] tab) {
+        TreeNode<K,V> root = null;
+        for (TreeNode<K,V> x = this, next; x != null; x= next) {
+            next = (TreeNode<K,V>)x.next;
+            x.left = x.right = null;
+            // 先安置好root节点
+            if (root == null) {
+                x.parent = null;
+                x.red = false;
+                root = x;
+            }
+            else {
+                K k = x.key;
+                int h = x.hash;
+                Class<?> kc = null;
+                for (TreeNode<k,V> p = root;;) {
+                    int dir, ph;
+                    K pk = p.key;
+                    if ((ph = p.hash) > h)
+                        dir = -1;
+                    else if (ph < h)
+                        dir = 1;
+                    else if ((kc == null && (kc = comparableClassFor(k)) == null) || (dir = compareComparables(kc, k, pk)) == 0)
+                        dir = tieBreakOrder(k, pk);
+                    TreeNode<K,V> xp = p;
+                    if ((p = (dir <= 0)?p.left : p.right) == null) {
+                        x.parent = xp;
+                        if (dir <= 0)
+                            xp.left = x;
+                        else
+                            xp.right = x;
+                        root = balanceInsertion(root, x);
+                        break;
+                    }
+                }
+            }
+        }
+        moveRootToFront(tab, root);
+    }
+
+    // 这里只是从双向链表的角度把root移动到首位，并没有破坏红黑树的平衡性
+    static <K,V> void moveRootToFront(Node<K,V>[] tab, TreeNode<K,V> root) {
+        int n;
+        if (root != null && tab != null && (n = tab.length) > 0) {
+            int index = (n - 1) & root.hash;
+            TreeNode<K,V> first = (TreeNode<K,V>)tab[index];
+            if (root != first) {
+                Node<K,V> rn;
+                tab[index] = root;
+                TreeNode<K,V> rp = root.prev;
+                if ((rn = root.next) != null)
+                    ((TreeNode<K,V>rn)).prev = rp;
+                if (rp != null)
+                    rp.next = rn;
+                if (first != null)
+                    first.prev = root;
+                root.next = first;
+                root.prev = null;
+            }
+            assert checkInvariants(root);
+        }
+    }
     /*-------------LinkedHashMap support---------------*/
     Node<K, V> newNode(int hash, K key, V value, Node<K, V> next) {
         return new Node<>(hash, key, value, next);
@@ -405,7 +489,7 @@ public class MyHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, Clo
             TreeNode<K, V> root = (parent != null) ? root(): this;
             for (TreeNode<K ,V> p = root;;) {
                 int dir, ph; K pk;
-                // 此节点的hash值与h不同，h是调用hash函数算出来的，而p.hash是节点真正的hash值，在此处比较是为了方便放入左子树还是右子树
+                // 此节点的hash值与h不同，h是调用hash()函数算出来的，而p.hash是节点真正的hash值，在此处比较是为了方便放入左子树还是右子树
                 if ((ph = p.hash) > h )
                     dir = -1;
                 else if (ph < h)
@@ -413,18 +497,23 @@ public class MyHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, Clo
                 // 同一个对象或者值相等都可以
                 else if ((pk = p.key) == k || (k != null && k.equals(pk)))
                     return p;
+                // 判断是否实现了compareble接口，hash值相等，但是不可比较进这里
                 else if ((kc == null && (kc = comparableClassFor(k)) == null) || (dir = compareComparables(kc, k, pk)) == 0)) {
+                // 先搜寻一遍是否已经有相同的node存在了
                     if (!searched) {
                         TreeNode<K, V> q, ch;
                         searched = true;
+                        // 如果找到了直接返回结果
                         if (((ch = p.left) != null &&
                                 (q = ch.find(h, k, kc)) != null) ||
                                 ((ch = p.right) != null &&
                                         (q= ch.find(h, k, kc)) != null))
                             return q;
                     }
+                    // 没找到的话需要确定往左子树还是右子树存放，因为没有compareable接口，所以只能通过本地的hash方法来比较
                     dir = tieBreakOrder(k, pk);
                 }
+                // 到这一步已经确定了树里面没有与插入node相同的key
                 TreeNode<K, V> xp = p;
                 if ((p = (dir <= 0) ? p.left : p.right) == null) {
                     Node<K, V> xpn = xp.next;
@@ -441,6 +530,102 @@ public class MyHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, Clo
                     return null;
                 }
             }
+        }
+        /*--------------------------------------------*/
+        // 红黑树的方法
+        static <K, V> TreeNode<K, V> rotateLeft(TreeNode<K, V> root, TreeNode<K, V> p) {
+            TreeNode<K, V> l, pp, rl;
+            if (p != null && (l = p.left) != null) {
+            }
+            return null;
+        }
+
+        static <K, V> TreeNode<K, V> rotateRight(TreeNode<K, V> root, TreeNode<K, V> p) {
+            TreeNode<K,V> l, pp, lr;
+            if (p != null && (l = p.left) != null) {
+                if ((lr = p.left = l.right) != null)
+                    lr.parent = p;
+                if ((pp = l.parent = p.parent) == null)
+                    (root = l).red = false;
+                else if (pp.right == p)
+                    pp.right = l;
+                else
+                    pp.left = l;
+                l.right = p;
+                p.parent = l;
+            }
+        }
+        static <K, V> TreeNode<K, V> balanceInsertion(TreeNode<K, V> root, TreeNode<K, V> x) {
+            // 红黑树插入的节点一定是红色，如果是黑色，会破坏红黑树的平衡性
+            x.red = true;
+            for (TreeNode<K, V> xp, xpp, xppl, xppr;;) {
+                // 如果没有父节点，则x节点就是根节点，要改为黑色
+                if ((xp = x.parent) == null) {
+                    x.red = false;
+                    return x;
+                }
+                // 如果有父节点，父节点是黑色的，并且没有爷爷节点，说明父节点是root节点
+                else if (!xp.red || (xpp = xp.parent) == null)
+                    return root;
+                // 如果有父节点和爷爷节点，并且父节点是红色的，爷爷节点是黑色的（因为原来的红黑树是平衡的），判断父节点是爷爷节点的左子节点
+                if (xp == (xppl = xpp.left)) {
+                    // 爷爷节点有有右节点（称他为叔叔节点），并且叔叔节点也是红色的，将这三个节点换颜色
+                    if ((xppr = xpp.right) != null && xppr.red) {
+                        xppr.red = false;
+                        xp.red = false;
+                        xpp.red = true;
+                        // 换颜色后要接着往上判断是否颜色平衡
+                        x= xp;
+                    }
+                    // 叔叔节点是黑色的
+                    else {
+                        // 接着判断本节点是父节点的右子节点还是左子节点，该节点和父节点都是红色，所以要旋转两次
+                        if (x == xp.right) {
+                            // 旋转以后父子节点调换了位置
+                            root = rotateLeft(root, x = xp);
+                            xpp = (xp = x.parent) == null ? null : xp.parent;
+                        }
+                        // 新增节点是父节点的左子节点
+                        if (xp != null) {
+                            xp.red = false;
+                            if (xpp != null) {
+                                xpp.red = true;
+                                root = rotateRight(root, xpp);
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (xppl != null && xppl.red) {
+                        xppl.red = false;
+                        xp.red = false;
+                        xpp.red = true;
+                        x = xpp;
+                    }
+                    else {
+                        if (x == xp.left) {
+                            root = rotateRight(root, x = xp);
+                            xpp = (xp = x.parent) == null ? null : xp.parent;
+                        }
+                        if (xp != null) {
+                            xp.red = false;
+                            if (xpp != null) {
+                                xpp.red = true;
+                                root = rotateLeft(root, xpp);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        static int tieBreakOrder(Object a, Object b) {
+            int d;
+            if (a == null || b == null || (d = a.getClass().getName().compareTo(b.getClass().getName())) == 0)
+                // identityHashCode调用的是默认的用内存地址计算的hash值，而不管是否重写了hash函数
+                d = (System.identityHashCode(a) <= System.identityHashCode(b) ?
+                -1 : 1);
+            return d;
         }
     }
 

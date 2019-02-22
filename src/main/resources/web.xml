@@ -8,7 +8,7 @@
         <servlet-class>com.example.spring.spring_mvc.MyDispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>application.properties</param-value>
+            <param-value>applicationContext.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
