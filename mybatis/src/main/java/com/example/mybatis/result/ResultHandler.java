@@ -47,7 +47,7 @@ public class ResultHandler {
                 e.printStackTrace();
             }
         }
-        return null;
+        return (E) resultObject;
     }
 
     public void setValue(Object resultObject, Field field, ResultSet resultset) throws NoSuchMethodException, SQLException, InvocationTargetException, IllegalAccessException {
@@ -56,9 +56,9 @@ public class ResultHandler {
     }
 
     private String upperCapital(String name) {
-        char[] arr = name.toCharArray();
-        arr[0] += 32;
-        return Arrays.toString(arr);
+        String first = name.substring(0, 1);
+        String tail = name.substring(1);
+        return first.toUpperCase() + tail;
     }
 
     public Object getResult(Field field, ResultSet rs) throws SQLException {

@@ -15,6 +15,9 @@ public class MtSimpleExecutor implements MtExecutor{
         this.configuration = configuration;
     }
 
+    public MtSimpleExecutor() {
+    }
+
     @Override
     public <T> T query(MapperData mapperData, Object parameter) {
         StatementHandler statementHandler = new StatementHandler(configuration);

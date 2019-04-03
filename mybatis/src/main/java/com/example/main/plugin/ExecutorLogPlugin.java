@@ -18,6 +18,9 @@ import java.lang.reflect.InvocationTargetException;
 public class ExecutorLogPlugin implements MtInterceptor {
     private final Logger logger = LoggerFactory.getLogger(ExecutorLogPlugin.class);
 
+    public ExecutorLogPlugin() {
+    }
+
     @Override
     public Object intercept(MtInvocation invocation) {
         MapperData mapperData = (MapperData) invocation.getArgs()[0];
