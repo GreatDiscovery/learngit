@@ -38,7 +38,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations {
     }
 
     @Override
-    public ListenableFuture<SendResult<K, V>> send(String topic, Object data) {
+    public ListenableFuture<SendResult<K, V>>  send(String topic, Object data) {
         ProducerRecord<K, V> producerRecord = new ProducerRecord(topic, data);
         return doSend(producerRecord);
     }

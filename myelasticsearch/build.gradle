@@ -7,7 +7,7 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
@@ -15,11 +15,6 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
-    // https://mvnrepository.com/artifact/io.netty/netty-all
-    compile group: 'io.netty', name: 'netty-all', version: '4.1.32.Final'
-
-//    compile('org.apache.dubbo:dubbo:2.7.0')
-//    compile('org.apache.dubbo:dubbo-spring-boot-starter:2.7.0')
-//    compile group: 'org.apache.kafka', name: 'kafka_2.12', version: '2.0.0'
+    compile "org.apache.httpcomponents:httpclient:4.2.6"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

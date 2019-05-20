@@ -15,11 +15,5 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
-    // https://mvnrepository.com/artifact/io.netty/netty-all
-    compile group: 'io.netty', name: 'netty-all', version: '4.1.32.Final'
-
-//    compile('org.apache.dubbo:dubbo:2.7.0')
-//    compile('org.apache.dubbo:dubbo-spring-boot-starter:2.7.0')
-//    compile group: 'org.apache.kafka', name: 'kafka_2.12', version: '2.0.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
