@@ -31,6 +31,7 @@ public class BulkBenchmarkTask implements BenchmarkTask {
         this.measurementIterations = measurementIterations;
         this.bulkSize = bulkSize;
     }
+
     @Override
     public void setUp(SampleRecorder sampleRecorder) {
         BlockingQueue<List<String>> bulkQueue = new ArrayBlockingQueue<>(256);
@@ -39,6 +40,7 @@ public class BulkBenchmarkTask implements BenchmarkTask {
         executorService.submit(runner);
         generator = new LoadGenerator(PathUtils.get(indexFilePath), bulkQueue, bulkSize);
     }
+
     @Override
     public void run() {
 
