@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MtTypeHandlerRegistory {
     public static Map<Type, MtTypeHandler> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
+
     public void regist(MtTypeHandler typeHandler) {
         TYPE_HANDLER_MAP.put(typeHandler.getJavaType(), typeHandler);
     }

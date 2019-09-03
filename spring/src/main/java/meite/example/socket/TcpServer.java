@@ -20,23 +20,24 @@ public class TcpServer {
         ServerSocket socket = new ServerSocket(8080);
         try {
             while (true) {
-            Socket accept = socket.accept();
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        InputStream is = accept.getInputStream();
-                        byte[] bytes = new byte[1024];
-                        int len = is.read(bytes);
-                        String result = new String(bytes, 0, len);
-                        System.out.println("接受数据：" + result);
-                    } catch (IOException e) {}
+                Socket accept = socket.accept();
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            InputStream is = accept.getInputStream();
+                            byte[] bytes = new byte[1024];
+                            int len = is.read(bytes);
+                            String result = new String(bytes, 0, len);
+                            System.out.println("接受数据：" + result);
+                        } catch (IOException e) {
+                        }
+                    }
+                });
+                while (true) {
+                    Thread.sleep(1000);
+                    System.out.println("测试阻塞------");
                 }
-            });
-            while (true) {
-                Thread.sleep(1000);
-                System.out.println("测试阻塞------");
-            }
 
             }
         } catch (Exception e) {
@@ -48,7 +49,7 @@ public class TcpServer {
     }
 }
 
-class TcpClient{
+class TcpClient {
     public static void main(String[] args) throws IOException {
         System.out.println("tcp客户端启动");
         Socket socket = new Socket("127.0.0.1", 8080);

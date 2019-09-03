@@ -12,7 +12,10 @@ import java.sql.ResultSet;
  */
 public interface MtTypeHandler<T> {
     void setParameter(PreparedStatement var1, int var2, T var3, JdbcType var4);
+
     T getResult(ResultSet var1, String var2);
+
     T getResult(ResultSet var1, int var2);
+
     Type getJavaType();
 }

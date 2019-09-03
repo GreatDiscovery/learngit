@@ -191,8 +191,9 @@ public class MyDispatcherServlet extends HttpServlet {
         public HandlerAdapt(Map<String, Integer> paramMapping) {
             this.paramMapping = paramMapping;
         }
+
         // 利用反射调用URL的方法，invoke需要对象和参数列表
-        public void handle(HttpServletRequest req, HttpServletResponse resp, Handler handler) throws Exception{
+        public void handle(HttpServletRequest req, HttpServletResponse resp, Handler handler) throws Exception {
             // 传request、response、handler作用
             Class<?>[] paramTypes = handler.method.getParameterTypes();
             // 反射全部值一块赋值给args
@@ -201,7 +202,9 @@ public class MyDispatcherServlet extends HttpServlet {
             for (Map.Entry<String, String[]> param : params.entrySet()) {
                 String value = Arrays.toString(param.getValue()).replaceAll("\\[ | \\]", "").replaceAll(",\\s", ",");
 
-                if (!this.paramMapping.containsKey(param.getKey())) {continue;}
+                if (!this.paramMapping.containsKey(param.getKey())) {
+                    continue;
+                }
                 int index = this.paramMapping.get(param.getKey());
 
                 paramValues[index] = castStringValue(value, paramTypes[index]);

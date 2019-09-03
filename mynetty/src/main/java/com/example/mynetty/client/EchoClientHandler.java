@@ -2,7 +2,7 @@ package com.example.mynetty.client;
 
 import org.jboss.netty.channel.*;
 
-public class EchoClientHandler  extends SimpleChannelHandler {
+public class EchoClientHandler extends SimpleChannelHandler {
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
         super.messageReceived(ctx, e);

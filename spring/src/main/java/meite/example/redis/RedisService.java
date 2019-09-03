@@ -21,10 +21,10 @@ public class RedisService {
 
     public void setObject(String key, Object value) {
         if (StringUtils.isEmpty(key) || value == null) {
-            return ;
+            return;
         }
         if (value instanceof String) {
-            temple.opsForValue().set(key, (String)value);
+            temple.opsForValue().set(key, (String) value);
         }
     }
 }

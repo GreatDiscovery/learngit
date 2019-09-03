@@ -8,7 +8,7 @@ import com.example.mybatis.statement.StatementHandler;
  * @author gavin
  * @date 2019/4/1 10:34
  */
-public class MtSimpleExecutor implements MtExecutor{
+public class MtSimpleExecutor implements MtExecutor {
     private MtConfiguration configuration;
 
     public MtSimpleExecutor(MtConfiguration configuration) {

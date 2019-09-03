@@ -13,6 +13,7 @@ public class MydubboApplication {
     private final Logger logger = LoggerFactory.getLogger(MydubboApplication.class);
     @Reference(version = "1.0.0", url = "dubbo://127.0.0.1:8000")
     private DubboService dubboService;
+
     public static void main(String[] args) {
         SpringApplication.run(MydubboApplication.class, args).close();
     }

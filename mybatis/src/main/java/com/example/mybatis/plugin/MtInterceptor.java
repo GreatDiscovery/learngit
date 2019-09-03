@@ -6,5 +6,6 @@ package com.example.mybatis.plugin;
  */
 public interface MtInterceptor {
     Object intercept(MtInvocation var1);
+
     Object plugin(Object var1);
 }

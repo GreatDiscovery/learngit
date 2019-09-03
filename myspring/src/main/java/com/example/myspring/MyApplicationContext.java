@@ -28,6 +28,7 @@ public class MyApplicationContext {
     protected List<String> classCache = new ArrayList<>();
     protected Map<String, Object> instanceMapping = new ConcurrentHashMap<>();
     protected Map<String, Handler> handlerMap = new ConcurrentHashMap<>();
+
     public MyApplicationContext(String location) {
         InputStream is = null;
         try {

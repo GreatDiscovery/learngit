@@ -1,13 +1,13 @@
 buildscript {
-	ext {
-		springBootVersion = '2.1.1.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '2.1.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'java'
@@ -20,26 +20,26 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter')
-	implementation('org.springframework.boot:spring-boot-starter-web')
-	implementation('org.springframework.boot:spring-boot-starter-aop')
-	implementation('org.springframework.boot:spring-boot-starter-jdbc')
-	implementation('org.springframework.boot:spring-boot-starter-logging')
-	implementation('org.springframework.boot:spring-boot-starter-cache')
-	implementation('org.springframework.boot:spring-boot-starter-data-redis')
-	implementation('mysql:mysql-connector-java:8.0.13')
-	implementation('org.springframework.boot:spring-boot-starter-test')
-	implementation('com.alibaba:druid:1.1.9')
-	implementation('org.jvnet.hudson:ganymed-ssh2:build210-hudson-1')
-	implementation('org.apache.commons:commons-compress:1.10')
-	implementation(group: 'com.alibaba', name: 'fastjson', version: '1.2.46')
-	compile("io.netty:netty:3.3.0.Final")
-	compile("commons-lang:commons-lang:2.6")
-	compile("org.apache.activemq:activemq-core:5.7.0")
-	compile('org.apache.zookeeper:zookeeper:3.4.6')
+    implementation('org.springframework.boot:spring-boot-starter')
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-starter-aop')
+    implementation('org.springframework.boot:spring-boot-starter-jdbc')
+    implementation('org.springframework.boot:spring-boot-starter-logging')
+    implementation('org.springframework.boot:spring-boot-starter-cache')
+    implementation('org.springframework.boot:spring-boot-starter-data-redis')
+    implementation('mysql:mysql-connector-java:8.0.13')
+    implementation('org.springframework.boot:spring-boot-starter-test')
+    implementation('com.alibaba:druid:1.1.9')
+    implementation('org.jvnet.hudson:ganymed-ssh2:build210-hudson-1')
+    implementation('org.apache.commons:commons-compress:1.10')
+    implementation(group: 'com.alibaba', name: 'fastjson', version: '1.2.46')
+    compile("io.netty:netty:3.3.0.Final")
+    compile("commons-lang:commons-lang:2.6")
+    compile("org.apache.activemq:activemq-core:5.7.0")
+    compile('org.apache.zookeeper:zookeeper:3.4.6')
 }

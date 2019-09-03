@@ -18,9 +18,11 @@ public class Decorator {
 
 abstract class Beverage {
     String description = "Unknown Beverage";
+
     public String getDescription() {
         return description;
     }
+
     abstract double cost();
 }
 
@@ -44,6 +46,7 @@ class HouseBlend extends Beverage {
     public HouseBlend() {
         description = "HouseBlend";
     }
+
     public double cost() {
         return 0.89;
     }

@@ -14,10 +14,11 @@ public class CreateThreadDemo01 extends Thread {
                 Thread.sleep(1);
                 System.out.println("id:" + getId() + ",run , i = " + i);
             }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
     @SuppressWarnings("deprecation")
     public static void main(String[] args) {
         CreateThreadDemo01 t1 = new CreateThreadDemo01();
@@ -34,7 +35,7 @@ public class CreateThreadDemo01 extends Thread {
             // 主线程死掉不影响用户线程
 
             Thread.currentThread().stop();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

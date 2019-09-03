@@ -33,6 +33,6 @@ public class TestBuffer {
         System.out.println("----------------");
         // 清空缓冲区依旧能读取到值，值被遗忘了
         byteBuffer.clear();
-        System.out.println((char)byteBuffer.get());
+        System.out.println((char) byteBuffer.get());
     }
 }

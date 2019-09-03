@@ -13,6 +13,7 @@ public class MyResponse {
     public MyResponse(SelectionKey selectionKey) {
         this.selectionKey = selectionKey;
     }
+
     public void write(String content) throws IOException {
         StringBuffer httpResponse = new StringBuffer();
         httpResponse.append("HTTP/1.1 200 OK\n")

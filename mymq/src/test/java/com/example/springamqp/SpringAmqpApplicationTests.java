@@ -19,6 +19,7 @@ public class SpringAmqpApplicationTests {
 
     @Autowired
     private Sender sender;
+
     @Test
     public void contextLoads() {
         sender.send();

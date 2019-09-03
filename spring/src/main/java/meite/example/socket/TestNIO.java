@@ -13,7 +13,7 @@ import java.util.Date;
 public class TestNIO {
 }
 
-class NioClient{
+class NioClient {
 
     public static void main(String[] args) throws IOException {
         System.out.println("客户端启动");

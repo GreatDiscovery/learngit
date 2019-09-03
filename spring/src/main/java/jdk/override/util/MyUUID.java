@@ -1,6 +1,7 @@
 package jdk.override.util;
 
 import org.junit.Test;
+
 import java.security.SecureRandom;
 
 /**
@@ -44,6 +45,7 @@ public final class MyUUID implements java.io.Serializable, Comparable<MyUUID> {
         randomBytes[8] |= 0x80;
         return new MyUUID(randomBytes);
     }
+
     @Override
     public int compareTo(MyUUID val) {
         return (this.mostSigBits < val.mostSigBits ? -1 :
@@ -52,6 +54,7 @@ public final class MyUUID implements java.io.Serializable, Comparable<MyUUID> {
                                 (this.leastSigBits > val.leastSigBits ? 1 :
                                         0))));
     }
+
     public boolean equals(Object obj) {
         if (null == obj || obj.getClass() != MyUUID.class)
             return false;
@@ -62,7 +65,7 @@ public final class MyUUID implements java.io.Serializable, Comparable<MyUUID> {
 
     public int hashCode() {
         long hilo = mostSigBits ^ leastSigBits;
-        return ((int) (hilo >> 32)) ^ (int)hilo;
+        return ((int) (hilo >> 32)) ^ (int) hilo;
     }
 
     public String toString() {

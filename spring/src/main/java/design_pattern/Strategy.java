@@ -11,23 +11,29 @@ public class Strategy {
     }
 }
 
-abstract class Duck{
+abstract class Duck {
     FlyBehavior flyBehavior;
     QuackBehavior quackBehavior;
-    Duck() {}
+
+    Duck() {
+    }
+
     public void performFly() {
         flyBehavior.fly();
     }
+
     public void performQuack() {
         quackBehavior.quack();
     }
+
     public void swim() {
         System.out.println("All ducks can swim");
     }
+
     abstract void display();
 }
 
-interface FlyBehavior{
+interface FlyBehavior {
     public void fly();
 }
 
@@ -36,13 +42,15 @@ class FlyWithWings implements FlyBehavior {
         System.out.println("I am flying");
     }
 }
+
 class FlyNoWay implements FlyBehavior {
     @Override
     public void fly() {
         System.out.println("I can not fly");
     }
 }
-interface QuackBehavior{
+
+interface QuackBehavior {
     public void quack();
 }
 
@@ -50,6 +58,7 @@ class MallardDuck extends Duck {
     public MallardDuck() {
         flyBehavior = new FlyWithWings();
     }
+
     public void display() {
         System.out.println("I am a real Mallard duck");
     }

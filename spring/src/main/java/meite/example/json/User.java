@@ -9,13 +9,16 @@ import java.util.List;
 
 public class User {
     private Integer id;
+
     public User() {
 
     }
+
     public User(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
+
     public Integer getId() {
         return id;
     }
@@ -53,7 +56,8 @@ public class User {
                 '}';
     }
 }
-class Item{
+
+class Item {
     private String itemId;
 
     public String getItemId() {

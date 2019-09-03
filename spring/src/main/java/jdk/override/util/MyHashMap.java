@@ -467,53 +467,57 @@ public class MyHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, Clo
     }
 
     public V remove(Object key) {
-        Node<K,V> e;
+        Node<K, V> e;
         return (e = remove(hash(key), key, null, false, true)) == null ? null : e.value;
     }
 
-    public Node<K,V> remove(int hash, Object key, Object value, boolean matchValue, boolean movable) {
-       Node<K,V>[] tab; Node<K,V> p; int n, index;
-       if ((tab = table) != null && (n = tab.length) > 0 &&
-               (p = tab[index = (n - 1) & hash]) != null) {
-           Node<K,V> node = null, e; K k; V v;
-           if (p.hash == hash &&
-                   ((k = p.key) == key || (key != null && key.equals(k))))
-               node = p;
-           else if ((e = p.next) != null) {
-               if (p instanceof TreeNode)
-                   node = ((TreeNode<K,V>)p).getTreeNode(hash, key);
-               else {
-                   do {
-                       if (e.hash == hash &&
-                               ((k = e.key) == key ||
-                                       (key != null && key.equals(k)))) {
-                           node = e;
-                           break;
-                       }
-                       p = e;
-                   } while ((e = e.next) != null);
-               }
-           }
-           if (node != null && (!matchValue || (v = node.value) == value || (value != null && value.equals(v)))) {
-               if (node instanceof TreeNode)
-                   ((TreeNode<K,V>)node).removeTreeNode(this, tab, movable);
-               else if (node == p)
-                   tab[index] = node.next;
-               else
-                   p.next = node.next;
-               ++modCount;
-               --size;
-               afterNodeRemoval(node);
-               return node;
-           }
-       }
-       return null;
+    public Node<K, V> remove(int hash, Object key, Object value, boolean matchValue, boolean movable) {
+        Node<K, V>[] tab;
+        Node<K, V> p;
+        int n, index;
+        if ((tab = table) != null && (n = tab.length) > 0 &&
+                (p = tab[index = (n - 1) & hash]) != null) {
+            Node<K, V> node = null, e;
+            K k;
+            V v;
+            if (p.hash == hash &&
+                    ((k = p.key) == key || (key != null && key.equals(k))))
+                node = p;
+            else if ((e = p.next) != null) {
+                if (p instanceof TreeNode)
+                    node = ((TreeNode<K, V>) p).getTreeNode(hash, key);
+                else {
+                    do {
+                        if (e.hash == hash &&
+                                ((k = e.key) == key ||
+                                        (key != null && key.equals(k)))) {
+                            node = e;
+                            break;
+                        }
+                        p = e;
+                    } while ((e = e.next) != null);
+                }
+            }
+            if (node != null && (!matchValue || (v = node.value) == value || (value != null && value.equals(v)))) {
+                if (node instanceof TreeNode)
+                    ((TreeNode<K, V>) node).removeTreeNode(this, tab, movable);
+                else if (node == p)
+                    tab[index] = node.next;
+                else
+                    p.next = node.next;
+                ++modCount;
+                --size;
+                afterNodeRemoval(node);
+                return node;
+            }
+        }
+        return null;
     }
 
     public void clear() {
-        Node<K,V>[] tab;
+        Node<K, V>[] tab;
         modCount++;
-        if ((tab = table) != null && size >0) {
+        if ((tab = table) != null && size > 0) {
             size = 0;
             for (int i = 0; i < tab.length; ++i)
                 tab[i] = null;
@@ -521,10 +525,11 @@ public class MyHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, Clo
     }
 
     public boolean containsValue(Object value) {
-        Node<K,V>[] tab; V v;
+        Node<K, V>[] tab;
+        V v;
         if ((tab = table) != null && size > 0) {
             for (int i = 0; i < tab.length; ++i) {
-                for (Node<K,V> e = tab[i]; e != null; e = e.next) {
+                for (Node<K, V> e = tab[i]; e != null; e = e.next) {
                     if ((v = e.value) == value || (value != null && value.equals(v)))
                         return true;
                 }
@@ -791,6 +796,7 @@ public class MyHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, Clo
 
 
     }
+
     // 从双向链表->红黑树之间的连接是否完整->红黑树的颜色是否正确->递归到子类进行检查
     static <K, V> boolean checkInvariants(TreeNode<K, V> t) {
         TreeNode<K, V> tp = t.parent, tl = t.left, tr = t.right,

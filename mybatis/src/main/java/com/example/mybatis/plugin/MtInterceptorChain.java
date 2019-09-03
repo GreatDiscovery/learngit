@@ -11,9 +11,11 @@ import java.util.List;
  */
 public class MtInterceptorChain {
     private List<MtInterceptor> interceptors = new ArrayList<>();
+
     public void addInterceptor(MtInterceptor interceptor) {
         this.interceptors.add(interceptor);
     }
+
     public List<MtInterceptor> getInterceptors() {
         return Collections.unmodifiableList(this.interceptors);
     }

@@ -12,6 +12,7 @@ public class Demo_980 {
     int[] dr = {0, -1, 0, 1};
     int[] dc = {1, 0, -1, 0};
     int R, C;
+
     public int uniquePathsIII(int[][] grid) {
         this.grid = grid;
         R = grid.length;
@@ -54,7 +55,7 @@ public class Demo_980 {
             int nr = r + dr[k];
             int nc = c + dc[k];
             if (0 <= nr && nr < R && 0 <= nc && nc < C) {
-                if (grid[nr][nc] %2 == 0) {
+                if (grid[nr][nc] % 2 == 0) {
                     dfs(nr, nc, todo);
                 }
             }

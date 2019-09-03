@@ -14,22 +14,25 @@ import java.util.stream.Stream;
  * @author gavin
  * @date 2019/3/1 12:10
  */
-public class MyHashSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, Serializable{
+public class MyHashSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, Serializable {
 
     static final long serialVersionUID = -5024744406713321676L;
     private transient HashMap<E, Object> map;
     private static final Object PRESENT = new Object();
+
     public MyHashSet() {
         map = new HashMap<>();
     }
+
     public MyHashSet(Collection<? extends E> c) {
-        map = new HashMap<>(Math.max((int) (c.size()/ .75f) + 1, 16));
+        map = new HashMap<>(Math.max((int) (c.size() / .75f) + 1, 16));
         addAll(c);
     }
 
     public boolean add(E e) {
         return map.put(e, PRESENT) == null;
     }
+
     @Override
     public Iterator<E> iterator() {
         return map.keySet().iterator();
@@ -65,7 +68,7 @@ public class MyHashSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, S
         try {
             MyHashSet<E> newSet = null;
             newSet = (MyHashSet<E>) super.clone();
-            newSet.map = ((HashMap<E, Object> ) map.clone());
+            newSet.map = ((HashMap<E, Object>) map.clone());
             return newSet;
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e);

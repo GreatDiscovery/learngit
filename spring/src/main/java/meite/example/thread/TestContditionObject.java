@@ -21,8 +21,7 @@ public class TestContditionObject {
                     System.out.println("end wait");
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
-                finally {
+                } finally {
                     lock.unlock();
                 }
 

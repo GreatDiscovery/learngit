@@ -9,8 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 //@SpringBootTest
 public class MydubboApplicationTests {
 
-    public ListNode deleteDuplication(ListNode pHead)
-    {
+    public ListNode deleteDuplication(ListNode pHead) {
         if (pHead == null || pHead.next == null) {
             return pHead;
         }
@@ -25,8 +24,7 @@ public class MydubboApplicationTests {
                     p = p.next;
                 }
                 pre.next = p.next;
-            }
-            else {
+            } else {
                 pre = p;
                 p = p.next;
             }

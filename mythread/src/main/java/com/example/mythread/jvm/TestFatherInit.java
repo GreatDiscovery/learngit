@@ -13,8 +13,10 @@ class SuperClass {
     static {
         System.out.println("superClass init!");
     }
+
     static int value = 123;
 }
+
 class SubClass extends SuperClass {
     static {
         System.out.println("subClass init!");

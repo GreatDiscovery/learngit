@@ -12,6 +12,7 @@ public enum SEX {
         this.sexName = sexName;
         this.sexType = sexType;
     }
+
     private String sexName;
     private Integer sexType;
 

@@ -49,6 +49,7 @@ public class MtConfiguration {
             e.printStackTrace();
         }
     }
+
     public void initDataSource() {
         this.dataSource = new MtDataSource(configProperties.getProperty("jdbc.url"), configProperties.getProperty("jdbc.driver"), configProperties.getProperty("jdbc.userName"), configProperties.getProperty("jdbc.passWord"));
     }
@@ -112,6 +113,6 @@ public class MtConfiguration {
         if (ExecutorType.SIMPLE == type) {
             executor = new MtSimpleExecutor(this);
         }
-        return  (MtExecutor) this.interceptorChain.pluginAll(executor);
+        return (MtExecutor) this.interceptorChain.pluginAll(executor);
     }
- }
+}

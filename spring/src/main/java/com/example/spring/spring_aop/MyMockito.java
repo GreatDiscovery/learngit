@@ -32,6 +32,7 @@ class MethodInfo {
     public int hashCode() {
         return interceptor.hashCode() + method.hashCode() + Arrays.hashCode(args);
     }
+
     @Override
     public boolean equals(Object other) {
         if (other instanceof MethodInfo) {

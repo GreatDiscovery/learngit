@@ -26,7 +26,7 @@ public class MapperRegistory {
             // 将名字变为Class对象
             Class type = this.getClass().getClassLoader().loadClass(t);
             this.methodSqlMapping.put(key, new MapperData(sql, type));
-            logger.info("In loading methodSqlMapping------sql: "+sql+" and type: "+type);
+            logger.info("In loading methodSqlMapping------sql: " + sql + " and type: " + type);
         }
     }
 

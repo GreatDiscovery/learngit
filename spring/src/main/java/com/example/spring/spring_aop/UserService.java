@@ -9,18 +9,20 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserService {
-    public UserService() {}
-    public void add(){
+    public UserService() {
+    }
+
+    public void add() {
         System.out.println("UserService add()");
     }
 
-    public boolean delete(){
+    public boolean delete() {
         System.out.println("UserService delete()");
         return true;
     }
 
-    public void edit(){
+    public void edit() {
         System.out.println("UserService edit()");
-        int i = 5/0;
+        int i = 5 / 0;
     }
 }

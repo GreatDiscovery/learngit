@@ -9,7 +9,7 @@ public interface GreetingService {
     void saySomething(String message);
 }
 
-class TestLanmbda{
+class TestLanmbda {
     public static void main(String[] args) {
         GreetingService greetingService = message -> System.out.println("hello" + message);
         greetingService.saySomething("gavin");

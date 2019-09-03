@@ -18,6 +18,7 @@ package com.example.elasticsearch.client;
  * specific language governing permissions and limitations
  * under the License.
  */
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.ConnectionClosedException;
@@ -141,6 +142,7 @@ public class RestClient implements Closeable {
      * <p>
      * You can use this if you do not have metadata up front about the nodes. If you do, prefer
      * {@link #builder(Node...)}.
+     *
      * @see Node#Node(HttpHost)
      */
     public static RestClientBuilder builder(HttpHost... hosts) {
@@ -208,7 +210,7 @@ public class RestClient implements Closeable {
      * they will be retried). In case of failures all of the alive nodes (or
      * dead nodes that deserve a retry) are retried until one responds or none
      * of them does, in which case an {@link IOException} will be thrown.
-     *
+     * <p>
      * This method works by performing an asynchronous call and waiting
      * for the result. If the asynchronous call throws an exception we wrap
      * it and rethrow it so that the stack trace attached to the exception
@@ -219,9 +221,9 @@ public class RestClient implements Closeable {
      *
      * @param request the request to perform
      * @return the response returned by Elasticsearch
-     * @throws IOException in case of a problem or the connection was aborted
+     * @throws IOException             in case of a problem or the connection was aborted
      * @throws ClientProtocolException in case of an http protocol error
-     * @throws ResponseException in case Elasticsearch responded with a status code that indicated an error
+     * @throws ResponseException       in case Elasticsearch responded with a status code that indicated an error
      */
     public Response performRequest(Request request) throws IOException {
         SyncResponseListener listener = new SyncResponseListener(maxRetryTimeoutMillis);
@@ -241,9 +243,9 @@ public class RestClient implements Closeable {
      * nodes that deserve a retry) are retried until one responds or none of
      * them does, in which case an {@link IOException} will be thrown.
      *
-     * @param request the request to perform
+     * @param request          the request to perform
      * @param responseListener the {@link ResponseListener} to notify when the
-     *      request is completed or fails
+     *                         request is completed or fails
      */
     public void performRequestAsync(Request request, ResponseListener responseListener) {
         try {
@@ -258,13 +260,13 @@ public class RestClient implements Closeable {
      * to be returned. Shortcut to {@link #performRequest(String, String, Map, HttpEntity, Header...)} but without parameters
      * and request body.
      *
-     * @param method the http method
+     * @param method   the http method
      * @param endpoint the path of the request (without host and port)
-     * @param headers the optional request headers
+     * @param headers  the optional request headers
      * @return the response returned by Elasticsearch
-     * @throws IOException in case of a problem or the connection was aborted
+     * @throws IOException             in case of a problem or the connection was aborted
      * @throws ClientProtocolException in case of an http protocol error
-     * @throws ResponseException in case Elasticsearch responded with a status code that indicated an error
+     * @throws ResponseException       in case Elasticsearch responded with a status code that indicated an error
      * @deprecated prefer {@link #performRequest(Request)}
      */
     @Deprecated
@@ -278,14 +280,14 @@ public class RestClient implements Closeable {
      * Sends a request to the Elasticsearch cluster that the client points to and waits for the corresponding response
      * to be returned. Shortcut to {@link #performRequest(String, String, Map, HttpEntity, Header...)} but without request body.
      *
-     * @param method the http method
+     * @param method   the http method
      * @param endpoint the path of the request (without host and port)
-     * @param params the query_string parameters
-     * @param headers the optional request headers
+     * @param params   the query_string parameters
+     * @param headers  the optional request headers
      * @return the response returned by Elasticsearch
-     * @throws IOException in case of a problem or the connection was aborted
+     * @throws IOException             in case of a problem or the connection was aborted
      * @throws ClientProtocolException in case of an http protocol error
-     * @throws ResponseException in case Elasticsearch responded with a status code that indicated an error
+     * @throws ResponseException       in case Elasticsearch responded with a status code that indicated an error
      * @deprecated prefer {@link #performRequest(Request)}
      */
     @Deprecated
@@ -302,15 +304,15 @@ public class RestClient implements Closeable {
      * which doesn't require specifying an {@link HttpAsyncResponseConsumerFactory} instance,
      * {@link HttpAsyncResponseConsumerFactory} will be used to create the needed instances of {@link HttpAsyncResponseConsumer}.
      *
-     * @param method the http method
+     * @param method   the http method
      * @param endpoint the path of the request (without host and port)
-     * @param params the query_string parameters
-     * @param entity the body of the request, null if not applicable
-     * @param headers the optional request headers
+     * @param params   the query_string parameters
+     * @param entity   the body of the request, null if not applicable
+     * @param headers  the optional request headers
      * @return the response returned by Elasticsearch
-     * @throws IOException in case of a problem or the connection was aborted
+     * @throws IOException             in case of a problem or the connection was aborted
      * @throws ClientProtocolException in case of an http protocol error
-     * @throws ResponseException in case Elasticsearch responded with a status code that indicated an error
+     * @throws ResponseException       in case Elasticsearch responded with a status code that indicated an error
      * @deprecated prefer {@link #performRequest(Request)}
      */
     @Deprecated
@@ -329,7 +331,7 @@ public class RestClient implements Closeable {
      * are marked dead and retried after a certain amount of time (minimum 1 minute, maximum 30 minutes), depending on how many times
      * they previously failed (the more failures, the later they will be retried). In case of failures all of the alive nodes (or dead
      * nodes that deserve a retry) are retried until one responds or none of them does, in which case an {@link IOException} will be thrown.
-     *
+     * <p>
      * This method works by performing an asynchronous call and waiting
      * for the result. If the asynchronous call throws an exception we wrap
      * it and rethrow it so that the stack trace attached to the exception
@@ -338,18 +340,18 @@ public class RestClient implements Closeable {
      * the cases. You can get the original exception from
      * {@link Exception#getCause()}.
      *
-     * @param method the http method
-     * @param endpoint the path of the request (without host and port)
-     * @param params the query_string parameters
-     * @param entity the body of the request, null if not applicable
+     * @param method                           the http method
+     * @param endpoint                         the path of the request (without host and port)
+     * @param params                           the query_string parameters
+     * @param entity                           the body of the request, null if not applicable
      * @param httpAsyncResponseConsumerFactory the {@link HttpAsyncResponseConsumerFactory} used to create one
-     * {@link HttpAsyncResponseConsumer} callback per retry. Controls how the response body gets streamed from a non-blocking HTTP
-     * connection on the client side.
-     * @param headers the optional request headers
+     *                                         {@link HttpAsyncResponseConsumer} callback per retry. Controls how the response body gets streamed from a non-blocking HTTP
+     *                                         connection on the client side.
+     * @param headers                          the optional request headers
      * @return the response returned by Elasticsearch
-     * @throws IOException in case of a problem or the connection was aborted
+     * @throws IOException             in case of a problem or the connection was aborted
      * @throws ClientProtocolException in case of an http protocol error
-     * @throws ResponseException in case Elasticsearch responded with a status code that indicated an error
+     * @throws ResponseException       in case Elasticsearch responded with a status code that indicated an error
      * @deprecated prefer {@link #performRequest(Request)}
      */
     @Deprecated
@@ -368,10 +370,10 @@ public class RestClient implements Closeable {
      * the provided {@link ResponseListener} will be notified upon completion or failure. Shortcut to
      * {@link #performRequestAsync(String, String, Map, HttpEntity, ResponseListener, Header...)} but without parameters and  request body.
      *
-     * @param method the http method
-     * @param endpoint the path of the request (without host and port)
+     * @param method           the http method
+     * @param endpoint         the path of the request (without host and port)
      * @param responseListener the {@link ResponseListener} to notify when the request is completed or fails
-     * @param headers the optional request headers
+     * @param headers          the optional request headers
      * @deprecated prefer {@link #performRequestAsync(Request, ResponseListener)}
      */
     @Deprecated
@@ -392,11 +394,11 @@ public class RestClient implements Closeable {
      * the provided {@link ResponseListener} will be notified upon completion or failure. Shortcut to
      * {@link #performRequestAsync(String, String, Map, HttpEntity, ResponseListener, Header...)} but without request body.
      *
-     * @param method the http method
-     * @param endpoint the path of the request (without host and port)
-     * @param params the query_string parameters
+     * @param method           the http method
+     * @param endpoint         the path of the request (without host and port)
+     * @param params           the query_string parameters
      * @param responseListener the {@link ResponseListener} to notify when the request is completed or fails
-     * @param headers the optional request headers
+     * @param headers          the optional request headers
      * @deprecated prefer {@link #performRequestAsync(Request, ResponseListener)}
      */
     @Deprecated
@@ -421,12 +423,12 @@ public class RestClient implements Closeable {
      * Header...)} which doesn't require specifying an {@link HttpAsyncResponseConsumerFactory} instance,
      * {@link HttpAsyncResponseConsumerFactory} will be used to create the needed instances of {@link HttpAsyncResponseConsumer}.
      *
-     * @param method the http method
-     * @param endpoint the path of the request (without host and port)
-     * @param params the query_string parameters
-     * @param entity the body of the request, null if not applicable
+     * @param method           the http method
+     * @param endpoint         the path of the request (without host and port)
+     * @param params           the query_string parameters
+     * @param entity           the body of the request, null if not applicable
      * @param responseListener the {@link ResponseListener} to notify when the request is completed or fails
-     * @param headers the optional request headers
+     * @param headers          the optional request headers
      * @deprecated prefer {@link #performRequestAsync(Request, ResponseListener)}
      */
     @Deprecated
@@ -453,15 +455,15 @@ public class RestClient implements Closeable {
      * the later they will be retried). In case of failures all of the alive nodes (or dead nodes that deserve a retry) are retried
      * until one responds or none of them does, in which case an {@link IOException} will be thrown.
      *
-     * @param method the http method
-     * @param endpoint the path of the request (without host and port)
-     * @param params the query_string parameters
-     * @param entity the body of the request, null if not applicable
+     * @param method                           the http method
+     * @param endpoint                         the path of the request (without host and port)
+     * @param params                           the query_string parameters
+     * @param entity                           the body of the request, null if not applicable
      * @param httpAsyncResponseConsumerFactory the {@link HttpAsyncResponseConsumerFactory} used to create one
-     * {@link HttpAsyncResponseConsumer} callback per retry. Controls how the response body gets streamed from a non-blocking HTTP
-     * connection on the client side.
-     * @param responseListener the {@link ResponseListener} to notify when the request is completed or fails
-     * @param headers the optional request headers
+     *                                         {@link HttpAsyncResponseConsumer} callback per retry. Controls how the response body gets streamed from a non-blocking HTTP
+     *                                         connection on the client side.
+     * @param responseListener                 the {@link ResponseListener} to notify when the request is completed or fails
+     * @param headers                          the optional request headers
      * @deprecated prefer {@link #performRequestAsync(Request, ResponseListener)}
      */
     @Deprecated
@@ -554,7 +556,7 @@ public class RestClient implements Closeable {
                             listener.onDefinitiveFailure(responseException);
                         }
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     listener.onDefinitiveFailure(e);
                 }
             }
@@ -565,7 +567,7 @@ public class RestClient implements Closeable {
                     RequestLogger.logFailedRequest(logger, request, node, failure);
                     onFailure(node);
                     retryIfPossible(failure);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     listener.onDefinitiveFailure(e);
                 }
             }
@@ -617,6 +619,7 @@ public class RestClient implements Closeable {
      * If there are no living nodes that match the {@link NodeSelector}
      * this will return the dead node that matches the {@link NodeSelector}
      * that is closest to being revived.
+     *
      * @throws IOException if no nodes are available
      */
     private NodeTuple<Iterator<Node>> nextNode() throws IOException {
@@ -714,7 +717,7 @@ public class RestClient implements Closeable {
      * Receives as an argument the host that was used for the failed attempt.
      */
     private void onFailure(Node node) {
-        while(true) {
+        while (true) {
             DeadHostState previousDeadHostState =
                     blacklist.putIfAbsent(node.getHost(), new DeadHostState(TimeSupplier.DEFAULT));
             if (previousDeadHostState == null) {
@@ -744,7 +747,7 @@ public class RestClient implements Closeable {
     }
 
     private static boolean isRetryStatus(int statusCode) {
-        switch(statusCode) {
+        switch (statusCode) {
             case 502:
             case 503:
             case 504:
@@ -761,7 +764,7 @@ public class RestClient implements Closeable {
     }
 
     private static HttpRequestBase createHttpRequest(String method, URI uri, HttpEntity entity) {
-        switch(method.toUpperCase(Locale.ROOT)) {
+        switch (method.toUpperCase(Locale.ROOT)) {
             case HttpDeleteWithEntity.METHOD_NAME:
                 return addRequestBody(new HttpDeleteWithEntity(uri), entity);
             case HttpGetWithEntity.METHOD_NAME:
@@ -788,7 +791,7 @@ public class RestClient implements Closeable {
     private static HttpRequestBase addRequestBody(HttpRequestBase httpRequest, HttpEntity entity) {
         if (entity != null) {
             if (httpRequest instanceof HttpEntityEnclosingRequestBase) {
-                ((HttpEntityEnclosingRequestBase)httpRequest).setEntity(entity);
+                ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(entity);
             } else {
                 throw new UnsupportedOperationException(httpRequest.getMethod() + " with body is not supported");
             }
@@ -817,7 +820,7 @@ public class RestClient implements Closeable {
                 uriBuilder.addParameter(param.getKey(), param.getValue());
             }
             return uriBuilder.build();
-        } catch(URISyntaxException e) {
+        } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
     }
@@ -953,7 +956,7 @@ public class RestClient implements Closeable {
                 if (exception instanceof IOException) {
                     throw new IOException(exception.getMessage(), exception);
                 }
-                if (exception instanceof RuntimeException){
+                if (exception instanceof RuntimeException) {
                     throw new RuntimeException(exception.getMessage(), exception);
                 }
                 throw new RuntimeException("error while performing request", exception);
@@ -974,7 +977,8 @@ public class RestClient implements Closeable {
         /**
          * Notifies that the node provided as argument has just failed
          */
-        public void onFailure(Node node) {}
+        public void onFailure(Node node) {
+        }
     }
 
     /**

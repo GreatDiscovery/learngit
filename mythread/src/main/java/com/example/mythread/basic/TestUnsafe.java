@@ -4,7 +4,7 @@ import sun.misc.Unsafe;
 
 public class TestUnsafe {
     static final Unsafe unsafe = Unsafe.getUnsafe();
-    static  long stateOffset;
+    static long stateOffset;
     private volatile long state = 0;
 
     static {

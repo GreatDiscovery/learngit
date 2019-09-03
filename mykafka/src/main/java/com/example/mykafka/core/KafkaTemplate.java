@@ -21,7 +21,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations {
     private volatile ProducerListener<K, V> producerListener = new LoggingProducerListener<K, V>();
 
     public KafkaTemplate(ProducerFactory<K, V> producerFactory) {
-       this(producerFactory, false);
+        this(producerFactory, false);
     }
 
     public KafkaTemplate(ProducerFactory<K, V> producerFactory, boolean autoFlush) {
@@ -38,7 +38,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations {
     }
 
     @Override
-    public ListenableFuture<SendResult<K, V>>  send(String topic, Object data) {
+    public ListenableFuture<SendResult<K, V>> send(String topic, Object data) {
         ProducerRecord<K, V> producerRecord = new ProducerRecord(topic, data);
         return doSend(producerRecord);
     }
@@ -98,14 +98,14 @@ public class KafkaTemplate<K, V> implements KafkaOperations {
 
     @Override
     public void flush() {
-       Producer<K, V> producer = getTheProducer();
-       try {
-           producer.flush();
-       }
-       finally {
-           closeProducer(producer);
-       }
+        Producer<K, V> producer = getTheProducer();
+        try {
+            producer.flush();
+        } finally {
+            closeProducer(producer);
+        }
     }
+
     protected void closeProducer(Producer<K, V> producer) {
         producer.close();
     }

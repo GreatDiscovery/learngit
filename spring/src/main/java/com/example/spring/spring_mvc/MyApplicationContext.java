@@ -77,7 +77,8 @@ public class MyApplicationContext {
         for (Map.Entry<String, Object> entry : instanceMapping.entrySet()) {
             Field[] fields = entry.getValue().getClass().getDeclaredFields();
             for (Field field : fields) {
-                if (!field.isAnnotationPresent(MyAutowired.class)) continue;;
+                if (!field.isAnnotationPresent(MyAutowired.class)) continue;
+                ;
                 MyAutowired myAutowired = field.getAnnotation(MyAutowired.class);
                 String id = myAutowired.value().trim();
                 if ("".equals(id)) {

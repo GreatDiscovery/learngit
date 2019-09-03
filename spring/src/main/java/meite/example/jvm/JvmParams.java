@@ -16,12 +16,14 @@ public class JvmParams {
         System.out.println("bytes2分配了4M内存");
         jvmInfo();
     }
+
     static private String toM(long maxMemory) {
-        float num = (float)maxMemory / (1024 * 1024);
+        float num = (float) maxMemory / (1024 * 1024);
         DecimalFormat df = new DecimalFormat("0.00");
         String s = df.format(num);
         return s;
     }
+
     public static void jvmInfo() {
         long maxMemory = Runtime.getRuntime().maxMemory();
         System.out.println("maxMemory:" + maxMemory + "," + toM(maxMemory) + "M");

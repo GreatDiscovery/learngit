@@ -26,7 +26,7 @@ public class MyRequest {
             url = httpHead.split("\\s")[1].split("\\?")[0];
             method = httpHead.split("\\s")[0];
             String path = httpHead.split("\\s")[1];
-            String[] params = path.indexOf("?") > 0 ? path.split("\\?")[1].split("\\&"):null;
+            String[] params = path.indexOf("?") > 0 ? path.split("\\?")[1].split("\\&") : null;
             if (params != null) {
                 for (String tmp : params) {
                     param.put(tmp.split("\\=")[0], tmp.split("\\=")[1]);

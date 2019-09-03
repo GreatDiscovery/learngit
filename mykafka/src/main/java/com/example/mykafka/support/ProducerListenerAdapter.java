@@ -1,4 +1,5 @@
 package com.example.mykafka.support;
+
 import org.apache.kafka.clients.producer.RecordMetadata;
 
 /**
@@ -6,7 +7,6 @@ import org.apache.kafka.clients.producer.RecordMetadata;
  *
  * @param <K> the key type.
  * @param <V> the value type.
- *
  * @author Marius Bogoevici
  * @author Gary Russell
  * @author Artem Bilan

@@ -17,6 +17,7 @@ import static org.junit.Assert.*;
 public class UserDaoTest {
     @Autowired
     UserDao userDao;
+
     @Test
     public void findByName() throws Exception {
         System.out.println(userDao.findByName("牛少东"));

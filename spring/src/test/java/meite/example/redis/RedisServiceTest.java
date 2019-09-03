@@ -18,6 +18,7 @@ import static org.junit.Assert.*;
 public class RedisServiceTest {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
     @Test
     public void testSetObject() {
         stringRedisTemplate.opsForValue().set("sbw", "hello");

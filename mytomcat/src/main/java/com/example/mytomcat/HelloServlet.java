@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class HelloServlet extends MyServlet {
     @Override
-    void doGet(MyRequest myRequest, MyResponse myResponse)  {
+    void doGet(MyRequest myRequest, MyResponse myResponse) {
         try {
             myResponse.write("get hello world");
         } catch (IOException e) {
