@@ -6,17 +6,16 @@ import com.example.mykafka.entity.MetricEntity;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class MykafkaApplicationTests {
     private Map<String, Object> configs = new HashMap<>();
 
@@ -27,7 +26,7 @@ public class MykafkaApplicationTests {
         StringSerializer serializer = new StringSerializer();
         DefaultKafkaProducerFactory defaultKafkaProducerFactory = new DefaultKafkaProducerFactory(configs, serializer, serializer);
         KafkaTemplate kafkaTemplate = new KafkaTemplate(defaultKafkaProducerFactory);
-        while (true) {
+//        while (true) {
             Thread.sleep(5000);
             MetricEntity metricEntity = new MetricEntity();
             metricEntity.setMetricName("cpu");
@@ -39,7 +38,7 @@ public class MykafkaApplicationTests {
             metricEntity.setRegion("cn-north-3");
             kafkaTemplate.send("monitor-metrics", "hello gavin!");
             kafkaTemplate.flush();
-        }
+//        }
     }
 
 }
